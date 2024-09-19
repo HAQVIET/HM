@@ -76,7 +76,7 @@ public class BookingServiceimpl implements BookingService {
         BookingEntity bookingEntity = new BookingEntity();
         bookingEntity.setTotalPrice(totalPrice);
         bookingEntity.setIsPaid(bookingCreateDto.getIsPaid());
-        bookingEntity.setName(bookingCreateDto.getName());
+        bookingEntity.setNameGuest(bookingCreateDto.getName());
         bookingEntity.setPhone(bookingCreateDto.getPhone());
         bookingEntity.setEmail(bookingCreateDto.getEmail());
         bookingEntity.setTimeIn(DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()));

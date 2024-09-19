@@ -1,6 +1,7 @@
 package com.example.hm.Entity;
 
 
+import com.example.hm.DTO.BookingServiceDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Data
 public class BookingServiceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -20,5 +22,13 @@ public class BookingServiceEntity {
     private Long idBooking;
     @Column(name = "id_service", nullable = false)
     private Long idService;
+    @Column(name ="quantity",nullable = false)
+    private Long quantity;
+
+    public BookingServiceEntity(BookingServiceDto bookingServiceDto) {
+        this.idBooking = bookingServiceDto.getIdBooking();
+        this.idService = bookingServiceDto.getIdService();
+        this.quantity = bookingServiceDto.getQuantity();
+    }
 
 }

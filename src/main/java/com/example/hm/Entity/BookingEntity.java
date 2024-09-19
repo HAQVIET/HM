@@ -24,7 +24,7 @@ public class BookingEntity {
     @Column(name = "id_room", nullable = false)
     private Long idRoom;
     @Column(name = "name", nullable = false)
-    private String name;
+    private String nameGuest;
     @Column(name = "phone", nullable = false)
     private String phone;
     @Column(name = "email", nullable = false)
@@ -42,7 +42,7 @@ public class BookingEntity {
 
     public BookingEntity(BookingCreateDto bookingCreateDto){
         this.idRoom = bookingCreateDto.getIdRoom();
-        this.name = bookingCreateDto.getName();
+        this.nameGuest = bookingCreateDto.getName();
         this.phone = bookingCreateDto.getPhone();
         this.email = bookingCreateDto.getEmail();
         this.timeIn = DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn());

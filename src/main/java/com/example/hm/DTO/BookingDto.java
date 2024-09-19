@@ -38,7 +38,7 @@ public class BookingDto {
    public BookingDto (BookingEntity bookingEntity,RoomEntity roomEntity) {
         this.id = bookingEntity.getId();
        this.room = convertRoomDtotoRoomEntity(roomEntity);
-        this.name = bookingEntity.getName();
+        this.name = bookingEntity.getNameGuest();
         this.phone = bookingEntity.getPhone();
         this.email = bookingEntity.getEmail();
         this.timeOut = bookingEntity.getTimeOut();
