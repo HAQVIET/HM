@@ -2,9 +2,11 @@ package com.example.hm.Service;
 
 
 import com.example.hm.DTO.*;
+import com.example.hm.Entity.AccountEntity;
 import com.example.hm.Entity.BookingEntity;
 import com.example.hm.Entity.BookingServiceEntity;
 import com.example.hm.Entity.RoomEntity;
+import com.example.hm.Respository.AccountRepository;
 import com.example.hm.Respository.BookingRespository;
 import com.example.hm.Respository.BookingServiceRepository;
 import com.example.hm.Respository.RoomRespository;
@@ -25,20 +27,28 @@ public class BookingServiceServiceimpl implements BookingServiceService {
 
     @Autowired
     RoomRespository roomRespository;
+    @Autowired
+    AccountRepository accountRepository;
 
 
     @Override
-    public BillDto getbills(Long id) {
-        if(!bookingServiceRepository.existsByIdBooking(id)){
+    public BillDto getbills( Long idBooking,Long idAccount) {
+        if(!bookingServiceRepository.existsByIdBooking(idBooking)){
             throw new CustomException("400", "Bill Not Found");
         }
 
-     List<ServiceCreateDto> serviceCreateDtos = bookingServiceRepository.getServiceCreateDto(id);
-        BookingEntity bookingEntity = bookingRespository.findById(id).get();
+     List<ServiceCreateDto> serviceCreateDtos = bookingServiceRepository.getServiceCreateDto(idBooking,idAccount);
+        BookingEntity bookingEntity = bookingRespository.findById(idBooking).get();
 
         RoomEntity roomEntity = roomRespository.findById(bookingEntity.getIdRoom()).get();
+        AccountEntity account = accountRepository.findById(bookingEntity.getIdAccount()).get();
+        InforHotelDto inforHotelDto = new InforHotelDto();
+        inforHotelDto.setHotelAddress(account.getAddress());
+        inforHotelDto.setHotelName(account.getName());
+        inforHotelDto.setHotline(account.getPhone());
 
         return BillDto.builder()
+                .inforHotel(inforHotelDto)
                 .bookingDto(new BookingDto(bookingEntity,roomEntity))
                 .serviceDtoList(serviceCreateDtos)
                 .totalAmount(serviceCreateDtos.stream().map(ServiceCreateDto::getAmount).reduce(BigDecimal.valueOf(bookingEntity.getTotalPrice()),BigDecimal::add))
@@ -60,7 +70,7 @@ public class BookingServiceServiceimpl implements BookingServiceService {
             bookingService.setQuantity(bookingService.getQuantity() + bookingServiceDto.getQuantity());
             bookingServiceRepository.save(bookingService);
         }
-        return getbills(id);
+        return getbills(bookingService.getIdBooking(), bookingServiceDto.getIdService());
     }
 
 }

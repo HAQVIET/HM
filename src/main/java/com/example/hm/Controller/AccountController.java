@@ -1,9 +1,6 @@
 package com.example.hm.Controller;
 
-import com.example.hm.DTO.AccountCreateDto;
-import com.example.hm.DTO.AccountDto;
-import com.example.hm.DTO.AccountUpdateDto;
-import com.example.hm.DTO.LoginDto;
+import com.example.hm.DTO.*;
 import com.example.hm.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +28,8 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginDto loginDto) {
-        accountService.login(loginDto);
-        return "dang nhap thang cong!";
+    public AccountId login(@RequestBody LoginDto loginDto) {
+       return accountService.login(loginDto);
+
     }
 }

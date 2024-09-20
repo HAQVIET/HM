@@ -42,6 +42,11 @@ public class BookingController {
         bookingService.deleteBooking(id);
     }
 
+    @GetMapping("/getlist/{id}")
+    List<BookingDto> getBookingList(@PathVariable("id") Long id) {
+        return bookingService.getBookings(id);
+    }
+
 
 
 }

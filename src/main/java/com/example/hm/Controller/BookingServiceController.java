@@ -2,13 +2,12 @@ package com.example.hm.Controller;
 
 
 import com.example.hm.DTO.BillDto;
+import com.example.hm.DTO.BookingServiceDto;
 import com.example.hm.Service.BookingService;
 import com.example.hm.Service.BookingServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +18,11 @@ public class BookingServiceController {
     private BookingServiceService bookingServiceService;
 
     @GetMapping()
-    BillDto getBills(@Param("id")Long id) {
-        return bookingServiceService.getbills(id);
+    BillDto getBills(@Param("idBooking")Long idBooking,@Param("idAccount") Long idAccount) {
+        return bookingServiceService.getbills(idBooking,idAccount);
+    }
+    @PutMapping("/updatebill/{id}")
+    BillDto updatebill(@PathVariable ("id") Long id, @RequestBody BookingServiceDto bookingServiceDto) {
+        return bookingServiceService.updatebills(id,bookingServiceDto);
     }
 }

@@ -3,6 +3,7 @@ package com.example.hm.Service;
 
 import com.example.hm.DTO.BookingCreateDto;
 import com.example.hm.DTO.BookingDto;
+import com.example.hm.DTO.RoomDto;
 import com.example.hm.Entity.BookingEntity;
 import com.example.hm.Entity.RoomEntity;
 import com.example.hm.Respository.BookingRespository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -89,23 +91,29 @@ public class BookingServiceimpl implements BookingService {
     }
 
     @Override
-    public BookingDto updateBooking(Long id,BookingCreateDto bookingCreateDto) {
+    public BookingDto updateBooking(Long id, BookingCreateDto bookingCreateDto) {
         Optional<BookingEntity> bookingEntity = bookingRespository.findById(id);
         if (bookingEntity.isEmpty()) {
             throw new CustomException("400", "Booking not found");
         }
         BookingEntity booking = bookingEntity.get();
-            booking.setIsPaid(bookingCreateDto.getIsPaid());
-            booking.setEmail(bookingCreateDto.getEmail());
+        booking.setIsPaid(bookingCreateDto.getIsPaid());
+        booking.setEmail(bookingCreateDto.getEmail());
 
 
-        return new BookingDto(bookingRespository.save(booking), RoomEntity.builder().build()) ;
+        return new BookingDto(bookingRespository.save(booking), RoomEntity.builder().build());
     }
 
     @Override
     public void deleteBooking(long id) {
         bookingRespository.deleteById(id);
 
+    }
+
+    @Override
+    public List<BookingDto> getBookings(Long idAccount) {
+        List<Object[]> rawBookings = bookingRespository.getBookingsByAccount(idAccount);
+        return mapBookingsToDto(rawBookings);
     }
 
     private Long calculateTotalPrice(Long pricePerNight, Timestamp checkInTimestamp, Timestamp checkOutTimestamp) {
@@ -116,4 +124,37 @@ public class BookingServiceimpl implements BookingService {
         Long days = ChronoUnit.DAYS.between(dateIn, dateOut);
         return days * pricePerNight;
     }
+
+    public List<BookingDto> mapBookingsToDto(List<Object[]> rawBookings) {
+        List<BookingDto> bookingDtos = new ArrayList<>();
+
+        for (Object[] rawBooking : rawBookings) {
+            Long bookingId = (Long) rawBooking[0];
+            Long roomId = (Long) rawBooking[1];
+            Long roomNumber = (Long) rawBooking[2];
+            String roomType = (String) rawBooking[3];
+            Long roomPrice = (Long) rawBooking[4];
+            Boolean isAvailable = (Boolean) rawBooking[5];
+
+            String nameGuest = (String) rawBooking[6];
+            String phone = (String) rawBooking[7];
+            String email = (String) rawBooking[8];
+            Timestamp timeIn = (Timestamp) rawBooking[9];
+            Timestamp timeOut = (Timestamp) rawBooking[10];
+            Long totalPrice = (Long) rawBooking[11];
+            Boolean isPaid = (Boolean) rawBooking[12];
+
+            // Create RoomDto
+            RoomDto roomDto = new RoomDto(roomId, roomNumber, roomType, roomPrice, isAvailable);
+
+            // Create BookingDto
+            BookingDto bookingDto = new BookingDto(bookingId, roomDto, nameGuest, phone, email, timeIn, timeOut, totalPrice, isPaid);
+
+            // Add to list
+            bookingDtos.add(bookingDto);
+        }
+
+        return bookingDtos;
+    }
 }
+

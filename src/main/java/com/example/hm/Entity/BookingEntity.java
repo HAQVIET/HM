@@ -37,7 +37,8 @@ public class BookingEntity {
     private Long totalPrice;
     @Column(name = "is_paid",nullable = false)
     private Boolean isPaid;
-    private Long time;
+    @Column(name = "id_account")
+    private Long idAccount;
 
 
     public BookingEntity(BookingCreateDto bookingCreateDto){

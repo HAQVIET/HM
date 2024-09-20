@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @Builder
 public class BillDto {
+    private InforHotelDto inforHotel;
     private BookingDto bookingDto;
     private List<ServiceCreateDto>  serviceDtoList;
     private BigDecimal totalAmount;

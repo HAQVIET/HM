@@ -15,6 +15,7 @@ public class Roomdto {
     private String typeRoom;;
     private Long price;
     private Boolean isAvailable;
+    private Long idAccount;
 
 
 }

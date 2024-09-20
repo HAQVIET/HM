@@ -6,7 +6,9 @@ import com.example.hm.DTO.Response.Roomdto;
 import com.example.hm.DTO.RoomCreateDto;
 import com.example.hm.DTO.RoomDto;
 import com.example.hm.DTO.helper.ResponseHelper;
+import com.example.hm.Entity.AccountEntity;
 import com.example.hm.Entity.RoomEntity;
+import com.example.hm.Respository.AccountRepository;
 import com.example.hm.Respository.RoomRespository;
 import com.example.hm.handler_exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class RoomServiceimpl implements RoomService {
     @Autowired
     RoomRespository roomRespository;
+    @Autowired
+    AccountRepository accountRepository;
 
 
     @Override
@@ -65,7 +69,19 @@ public class RoomServiceimpl implements RoomService {
     @Override
     public PageDataDto<Roomdto> getlistroom(RoomFilter roomFilter) {
         Pageable pageable = PageRequest.of(roomFilter.getPage()-1, roomFilter.getPageSize());
-        return ResponseHelper.convert2PageDataDto(roomRespository.getPageRoom(roomFilter.getNumberRoom(),roomFilter.getTypeRoom(),roomFilter.getPrice(),roomFilter.getAvailable(),pageable));
+        return ResponseHelper.convert2PageDataDto(roomRespository.getPageRoom(roomFilter.getNumberRoom(),roomFilter.getTypeRoom(),roomFilter.getPrice(),roomFilter.getAvailable(), roomFilter.getIdAccount(), pageable));
 
+    }
+
+    @Override
+    public List<RoomDto> getlist(Long idAccount) {
+        if(idAccount == null){
+            throw new CustomException("400","Id of account is required");
+        }
+        Optional<AccountEntity> account = accountRepository.findById(idAccount);
+        if(account.isEmpty()){
+            throw new CustomException("404","Account not found");
+        }
+        return roomRespository.getListRoom(idAccount);
     }
 }

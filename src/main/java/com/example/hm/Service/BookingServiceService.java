@@ -7,7 +7,7 @@ import com.example.hm.DTO.BookingServiceDto;
 import java.util.List;
 
 public interface BookingServiceService {
-    BillDto getbills(Long id);
+    BillDto getbills(Long idBooking,Long idAccount);
     BillDto updatebills(Long id, BookingServiceDto bookingServiceDto);
 
 }

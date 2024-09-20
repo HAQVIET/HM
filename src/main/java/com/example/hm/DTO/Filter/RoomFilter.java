@@ -14,6 +14,7 @@ public class RoomFilter {
     private String typeRoom;;
     private Long price;
     private Boolean available;
+    private Long idAccount;
     private Integer page;
     private Integer pageSize;
 }

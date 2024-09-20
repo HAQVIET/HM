@@ -24,6 +24,8 @@ public class BookingServiceEntity {
     private Long idService;
     @Column(name ="quantity",nullable = false)
     private Long quantity;
+    @Column(name ="id_account")
+    private Long idAccount;
 
     public BookingServiceEntity(BookingServiceDto bookingServiceDto) {
         this.idBooking = bookingServiceDto.getIdBooking();

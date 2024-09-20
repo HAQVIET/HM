@@ -26,8 +26,8 @@ public class RoomEntity {
     private Long price;
     @Column(name = "is_availibe",nullable = false)
     private Boolean isAvailabile;
-
-
+    @Column(name = "id_account")
+    private Long idAccount;
     public RoomEntity(RoomCreateDto roomCreateDto) {
         this.numberRoom = roomCreateDto.getNumberRoom();
         this.typeRoom = roomCreateDto.getTypeRoom();

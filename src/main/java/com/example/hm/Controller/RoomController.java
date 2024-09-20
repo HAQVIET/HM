@@ -49,6 +49,7 @@ public class RoomController {
              @RequestParam (name = "typeRoom",required = false ) String typeRoom,
              @RequestParam (name = "price",required = false ) Long price,
              @RequestParam(name = "isAvailibe", required = false) Boolean isAvailibe,
+             @RequestParam(name = "idAccount",required = false ) Long idAccount,
              @RequestParam (name = "page",required = false, defaultValue = "1") Integer page,
              @RequestParam (name = "pageSize",required = false , defaultValue = "10") Integer pageSize
             )
@@ -58,9 +59,15 @@ public class RoomController {
                 .typeRoom(typeRoom)
                 .price(price)
                 .available(isAvailibe)
+                .idAccount(idAccount)
                 .page(page)
                 .pageSize(pageSize)
                 .build();
         return roomService.getlistroom(roomFilter);
+    }
+
+    @GetMapping("/getlist/{id}")
+    List<RoomDto> getRoomList(@PathVariable("id") Long id) {
+     return roomService.getlist(id);
     }
 }

@@ -19,4 +19,5 @@ public interface RoomService {
     RoomDto update(Long id ,RoomCreateDto roomCreateDto);
     void delete(Long id);
     PageDataDto<Roomdto> getlistroom(RoomFilter roomFilter);
+    List<RoomDto>getlist(Long idAccount);
 }
