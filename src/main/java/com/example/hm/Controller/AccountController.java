@@ -1,15 +1,23 @@
 package com.example.hm.Controller;
 
 import com.example.hm.DTO.*;
+import com.example.hm.Entity.AccountEntity;
 import com.example.hm.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
 public class AccountController {
     @Autowired
     private AccountService accountService;
+
+    @GetMapping
+    List<AccountEntity> findAll() {
+        return accountService.getAllAccounts();
+    }
 
     @PostMapping("/register")
     AccountDto register(@RequestBody AccountCreateDto accountCreateDto) {
