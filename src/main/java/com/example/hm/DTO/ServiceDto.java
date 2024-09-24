@@ -12,11 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ServiceDto {
+    private Long id ;
     private String name;
     private Long price;
+    private String image;
 
     public ServiceDto(ServiceEntity serviceEntity) {
+        this.id = serviceEntity.getId();
         this.name = serviceEntity.getName();
         this.price = serviceEntity.getPrice();
+        this.image = serviceEntity.getImage();
     }
 }

@@ -46,6 +46,7 @@ public class BookingServiceServiceimpl implements BookingServiceService {
         inforHotelDto.setHotelAddress(account.getAddress());
         inforHotelDto.setHotelName(account.getName());
         inforHotelDto.setHotline(account.getPhone());
+        inforHotelDto.setImage(account.getImage());
 
         return BillDto.builder()
                 .inforHotel(inforHotelDto)

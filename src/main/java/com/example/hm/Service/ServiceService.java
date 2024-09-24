@@ -11,5 +11,6 @@ public interface ServiceService {
     Optional<ServiceEntity> getServiceById(Long id);
     ServiceDto addService(ServiceDto serviceDto);
     ServiceDto updateService(Long id,ServiceDto serviceDto);
+    List<ServiceDto> getServiceByAccountId(Long idAccount);
     void deleteService(Long id);
 }

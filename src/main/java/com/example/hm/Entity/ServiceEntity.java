@@ -24,9 +24,14 @@ public class ServiceEntity {
     private String name;
     @Column(name = "price", nullable = false)
     private Long price;
+    @Column(name = "image")
+    private String image;
+    @Column(name ="id_account")
+    private Long idAccount;
 
     public ServiceEntity(ServiceDto serviceDto) {
         this.name = serviceDto.getName();
         this.price = serviceDto.getPrice();
+        this.image = serviceDto.getImage();
     }
 }

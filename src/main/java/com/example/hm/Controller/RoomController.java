@@ -10,6 +10,7 @@ import com.example.hm.Entity.RoomEntity;
 import com.example.hm.Service.RoomService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,8 +67,8 @@ public class RoomController {
         return roomService.getlistroom(roomFilter);
     }
 
-    @GetMapping("/getlist/{id}")
-    List<RoomDto> getRoomList(@PathVariable("id") Long id) {
+    @GetMapping("/getlistt")
+    List<RoomDto> getRoomList(@Param("id") Long id) {
      return roomService.getlist(id);
     }
 }

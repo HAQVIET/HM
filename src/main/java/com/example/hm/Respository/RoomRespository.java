@@ -32,6 +32,6 @@ public interface RoomRespository extends JpaRepository<RoomEntity, Long>, JpaSpe
 
     @Query(value = "select new com.example.hm.DTO.RoomDto(r.id,r.numberRoom ,r.typeRoom,r.price,r.isAvailabile) " +
             "   from RoomEntity r " +
-            "   where :id_account is null or r.idAccount = :id_account")
+            "   where r.idAccount = :id_account")
     List<RoomDto> getListRoom(@Param("id_account") Long id_account);
 }

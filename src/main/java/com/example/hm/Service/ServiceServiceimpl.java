@@ -2,7 +2,9 @@ package com.example.hm.Service;
 
 
 import com.example.hm.DTO.ServiceDto;
+import com.example.hm.Entity.AccountEntity;
 import com.example.hm.Entity.ServiceEntity;
+import com.example.hm.Respository.AccountRepository;
 import com.example.hm.Respository.ServiceRespository;
 import com.example.hm.handler_exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import java.util.Optional;
 public class ServiceServiceimpl implements ServiceService {
     @Autowired
     ServiceRespository serviceRespository;
+    @Autowired
+    AccountRepository accountRepository;
 
     @Override
     public List<ServiceEntity> getAllServices() {
@@ -48,6 +52,18 @@ public class ServiceServiceimpl implements ServiceService {
     service.setPrice(serviceDto.getPrice());
 
         return new ServiceDto(serviceRespository.save(service));
+    }
+
+    @Override
+    public List<ServiceDto> getServiceByAccountId(Long idAccount) {
+        if(idAccount == null){
+            throw new CustomException("400","Id of account is required");
+        }
+        Optional<AccountEntity> account = accountRepository.findById(idAccount);
+        if(account.isEmpty()){
+            throw new CustomException("404","Account not found");
+        }
+        return serviceRespository.getServiceDtoByAccount(idAccount);
     }
 
     @Override

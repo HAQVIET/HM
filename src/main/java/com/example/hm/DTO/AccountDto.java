@@ -16,6 +16,7 @@ public class AccountDto {
     private String name;
     private String phone;
     private String address;
+    private String image;
 
     public AccountDto(AccountEntity accountEntity) {
         this.id = accountEntity.getId();
@@ -23,5 +24,7 @@ public class AccountDto {
         this.name = accountEntity.getName();
         this.phone = accountEntity.getPhone();
         this.address = accountEntity.getAddress();
+        this.image = accountEntity.getImage();
+
     }
 }

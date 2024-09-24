@@ -27,6 +27,8 @@ public class AccountEntity {
     private String phone;
     @Column(name="address", nullable = false)
     private String address;
+    @Column(name ="image")
+    private String image;
 
     public AccountEntity(AccountCreateDto accountCreateDto) {
         this.email = accountCreateDto.getEmail();

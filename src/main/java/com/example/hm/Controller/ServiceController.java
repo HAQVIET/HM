@@ -5,6 +5,7 @@ import com.example.hm.DTO.ServiceDto;
 import com.example.hm.Entity.ServiceEntity;
 import com.example.hm.Service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,9 @@ public class ServiceController {
     @DeleteMapping("/delete/{id}")
     void deleteService(@PathVariable ("id") Long id) {
         serviceService.deleteService(id);
-
+    }
+    @GetMapping ("/getlist")
+    List<ServiceDto> getService(@Param("idAccount") Long idAccount) {
+       return serviceService.getServiceByAccountId(idAccount);
     }
 }

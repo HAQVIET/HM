@@ -14,4 +14,5 @@ public class InforHotelDto {
     private String hotelName;
     private String hotelAddress;
     private String hotline;
+    private String image;
 }
