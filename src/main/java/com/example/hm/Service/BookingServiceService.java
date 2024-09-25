@@ -9,5 +9,6 @@ import java.util.List;
 public interface BookingServiceService {
     BillDto getbills(Long idBooking,Long idAccount);
     BillDto updatebills(Long id, BookingServiceDto bookingServiceDto);
+    BookingServiceDto addService(BookingServiceDto bookingServiceDto);
 
 }

@@ -21,11 +21,6 @@ public class ServiceServiceimpl implements ServiceService {
     AccountRepository accountRepository;
 
     @Override
-    public List<ServiceEntity> getAllServices() {
-        return serviceRespository.findAll();
-    }
-
-    @Override
     public Optional<ServiceEntity> getServiceById(Long id) {
         return serviceRespository.findById(id);
     }
@@ -37,6 +32,12 @@ public class ServiceServiceimpl implements ServiceService {
         }
         if(serviceDto.getPrice() == null || serviceDto.getPrice() < 0){
             throw new CustomException("400","Price is required");
+        }
+        if(serviceDto.getIdAccount() == null || serviceDto.getIdAccount() < 0){
+            throw new CustomException("400","IdAccount is required");
+        }
+        if(accountRepository.findById(serviceDto.getIdAccount()).isEmpty()){
+            throw new CustomException("400","Account not found");
         }
         return new ServiceDto(serviceRespository.save(new ServiceEntity(serviceDto)));
     }

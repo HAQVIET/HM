@@ -10,6 +10,8 @@ import com.example.hm.DTO.Response.PageDataDto;
 import com.example.hm.DTO.Response.Roomdto;
 import com.example.hm.Entity.BookingEntity;
 import com.example.hm.Service.BookingService;
+import com.example.hm.Service.RoomService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ser.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -24,14 +26,6 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @GetMapping("/list")
-    List<BookingEntity> getBookings() {
-        return bookingService.findAll();
-    }
-    @GetMapping("/{id}")
-    Optional<BookingEntity> getCustomerById(@PathVariable("id") Long id) {
-        return bookingService.findById(id);
-    }
     @PostMapping("/add")
     BookingDto addBooking(@RequestBody BookingCreateDto bookingCreateDto) {
         return bookingService.addBooking(bookingCreateDto);
@@ -54,7 +48,7 @@ public class BookingController {
         return bookingService.getBooking(idAccount,idBooking);
     }
     @GetMapping("/report")
-    ReportDto getReport (@Param("idAccount") Long idAccount){
+    ReportDto getReport (@Param("idAccount") Long idAccount) {
         return bookingService.getReport(idAccount);
     }
 

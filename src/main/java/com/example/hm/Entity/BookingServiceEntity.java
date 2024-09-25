@@ -31,6 +31,7 @@ public class BookingServiceEntity {
         this.idBooking = bookingServiceDto.getIdBooking();
         this.idService = bookingServiceDto.getIdService();
         this.quantity = bookingServiceDto.getQuantity();
+        this.idAccount = bookingServiceDto.getIdAccount();
     }
 
 }

@@ -16,11 +16,18 @@ public class ServiceDto {
     private String name;
     private Long price;
     private String image;
+    private Long idAccount;
 
     public ServiceDto(ServiceEntity serviceEntity) {
         this.id = serviceEntity.getId();
         this.name = serviceEntity.getName();
         this.price = serviceEntity.getPrice();
         this.image = serviceEntity.getImage();
+    }
+    public ServiceDto(Long id, String name, Long price, String image) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.image = image;
     }
 }

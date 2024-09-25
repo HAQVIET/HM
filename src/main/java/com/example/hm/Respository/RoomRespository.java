@@ -18,13 +18,13 @@ import java.util.List;
 public interface RoomRespository extends JpaRepository<RoomEntity, Long>, JpaSpecificationExecutor<RoomEntity> {
     @Query(value = " select new com.example.hm.DTO.Response.Roomdto(r.numberRoom ,r.typeRoom ,r.price ,r.isAvailabile,r.idAccount)  " +
             "   from RoomEntity r " +
-            "   where( :numberRoom is null or r.numberRoom = :numberRoom) " +
-            "   AND( :typeRoom IS NULL OR r.typeRoom ilike %:typeRoom% ) " +
+            "   where( :numberRoom is null or r.numberRoom ilike %:numberRoom%) " +
+            "   AND( :typeRoom IS NULL OR r.typeRoom =:typeRoom ) " +
             "   and( :price is null or r.price = :price) " +
             "   and( :isAvailabile is null or r.isAvailabile = :isAvailabile) "+
             "   and( :idAccount is null or r.idAccount = :idAccount) ")
-    Page<Roomdto> getPageRoom(@Param("numberRoom") Long numberRoom,
-                                @Param("typeRoom") String typeRoom,
+    Page<Roomdto> getPageRoom(@Param("numberRoom") String numberRoom,
+                                @Param("typeRoom") Long typeRoom,
                                 @Param("price") Long price,
                                 @Param("isAvailabile") Boolean isAvailabile,
                                  @Param("idAccount")  Long idAccount,

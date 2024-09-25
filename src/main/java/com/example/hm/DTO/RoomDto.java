@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RoomDto {
     private Long id;
-    private Long numberRoom;
-    private String typeRoom;;
+    private String numberRoom;
+    private Long typeRoom;;
     private Long price;
     private Boolean available;
 

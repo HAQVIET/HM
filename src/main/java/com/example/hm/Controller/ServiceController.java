@@ -17,11 +17,6 @@ public class ServiceController {
     @Autowired
     private ServiceService serviceService;
 
-    @GetMapping("/list")
-    List<ServiceEntity> getServiceList() {
-        return serviceService.getAllServices();
-    }
-
     @GetMapping("/{id}")
     Optional<ServiceEntity> getServiceById(@PathVariable ("id") Long id) {
         return serviceService.getServiceById(id);

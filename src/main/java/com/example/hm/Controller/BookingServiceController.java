@@ -25,4 +25,8 @@ public class BookingServiceController {
     BillDto updatebill(@PathVariable ("id") Long id, @RequestBody BookingServiceDto bookingServiceDto) {
         return bookingServiceService.updatebills(id,bookingServiceDto);
     }
+    @PostMapping("/addservice")
+    BookingServiceDto addservice(@RequestBody BookingServiceDto bookingServiceDto) {
+        return bookingServiceService.addService(bookingServiceDto);
+    }
 }

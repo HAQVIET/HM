@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RoomCreateDto {
-    private Long numberRoom;
-    private String typeRoom;;
+    private String numberRoom;
+    private Long typeRoom;;
     private Long price;
+    private Long idAccount;
 }

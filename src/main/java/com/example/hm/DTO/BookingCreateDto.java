@@ -15,10 +15,8 @@ import java.sql.Timestamp;
 @Builder
 public class BookingCreateDto {
     private Long idRoom;
-    private String name;
-    private String phone;
-    private String email;
     private String timeIn;
     private String timeOut;
     private Boolean isPaid;
+    private Long idAccount;
 }

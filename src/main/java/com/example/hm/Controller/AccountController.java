@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
@@ -18,6 +19,11 @@ public class AccountController {
     List<AccountEntity> findAll() {
         return accountService.getAllAccounts();
     }
+    @GetMapping("/{id}")
+    Optional<AccountEntity> findById(@PathVariable Long id) {
+         return accountService.getAccountById(id);
+    }
+
 
     @PostMapping("/register")
     AccountDto register(@RequestBody AccountCreateDto accountCreateDto) {

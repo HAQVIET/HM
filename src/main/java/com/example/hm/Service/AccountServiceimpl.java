@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -23,6 +24,14 @@ public class AccountServiceimpl implements AccountService {
     @Override
     public List<AccountEntity> getAllAccounts() {
         return accountRepository.findAll();
+    }
+
+    @Override
+    public Optional<AccountEntity> getAccountById(Long id) {
+        if(accountRepository.findById(id).isEmpty()){
+            throw new CustomException("400","Account Not Found");
+        }
+        return accountRepository.findById(id);
     }
 
     @Override

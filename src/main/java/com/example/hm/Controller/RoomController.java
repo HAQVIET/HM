@@ -23,10 +23,6 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @GetMapping("/list")
-    List<RoomEntity> getRoomList() {
-      return roomService.findAll();
-    }
     @GetMapping("/{id}")
     Optional<RoomEntity>findRoomById(@PathVariable("id") Long id) {
         return roomService.findById(id);
@@ -46,8 +42,8 @@ public class RoomController {
     }
     @GetMapping("/getlist")
     PageDataDto<Roomdto> filterProperty
-            (@RequestParam (name = "numberRoom",required = false ) Long numberRoom,
-             @RequestParam (name = "typeRoom",required = false ) String typeRoom,
+            (@RequestParam (name = "numberRoom",required = false ) String numberRoom,
+             @RequestParam (name = "typeRoom",required = false ) Long typeRoom,
              @RequestParam (name = "price",required = false ) Long price,
              @RequestParam(name = "isAvailibe", required = false) Boolean isAvailibe,
              @RequestParam(name = "idAccount",required = false ) Long idAccount,

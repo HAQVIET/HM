@@ -6,10 +6,7 @@ import com.example.hm.Entity.AccountEntity;
 import com.example.hm.Entity.BookingEntity;
 import com.example.hm.Entity.BookingServiceEntity;
 import com.example.hm.Entity.RoomEntity;
-import com.example.hm.Respository.AccountRepository;
-import com.example.hm.Respository.BookingRespository;
-import com.example.hm.Respository.BookingServiceRepository;
-import com.example.hm.Respository.RoomRespository;
+import com.example.hm.Respository.*;
 import com.example.hm.handler_exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,8 @@ public class BookingServiceServiceimpl implements BookingServiceService {
     RoomRespository roomRespository;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    ServiceRespository serviceRespository;
 
 
     @Override
@@ -72,6 +71,26 @@ public class BookingServiceServiceimpl implements BookingServiceService {
             bookingServiceRepository.save(bookingService);
         }
         return getbills(bookingService.getIdBooking(), bookingServiceDto.getIdService());
+    }
+
+    @Override
+    public BookingServiceDto addService(BookingServiceDto bookingServiceDto) {
+        if(bookingServiceDto.getIdBooking() == null){
+            throw new CustomException("400", "Booking is required");
+        }
+        if(bookingRespository.findById(bookingServiceDto.getIdBooking()).isEmpty()){
+            throw new CustomException("400", "Booking Not Found");
+        }
+        if(bookingServiceDto.getIdService() == null){
+            throw new CustomException("400", "Service is required");
+        }
+        if(serviceRespository.findById(bookingServiceDto.getIdService()).isEmpty()){
+            throw new CustomException("400", "Service Not Found");
+        }
+    if(bookingServiceDto.getQuantity() == null || bookingServiceDto.getQuantity() <= 0){
+        throw new CustomException("400", "Quantity is required");
+    }
+            return new BookingServiceDto(bookingServiceRepository.save(new BookingServiceEntity(bookingServiceDto)));
     }
 
 }

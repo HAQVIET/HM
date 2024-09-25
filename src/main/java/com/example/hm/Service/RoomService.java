@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoomService {
-    List<RoomEntity> findAll();
     Optional<RoomEntity> findById(Long id);
     RoomDto add(RoomCreateDto roomCreateDto);
     RoomDto update(Long id ,RoomCreateDto roomCreateDto);

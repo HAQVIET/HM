@@ -8,8 +8,10 @@ import com.example.hm.Entity.RoomEntity;
 import com.example.hm.Respository.AccountRepository;
 import com.example.hm.Respository.BookingRespository;
 import com.example.hm.Respository.RoomRespository;
+import com.example.hm.Respository.spec.SpecBillRepository;
 import com.example.hm.handler_exception.CustomException;
 import com.example.hm.utils.DateUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,16 +34,9 @@ public class BookingServiceimpl implements BookingService {
     private RoomRespository roomRespository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private SpecBillRepository specBillRepository;
 
-    @Override
-    public List<BookingEntity> findAll() {
-        return bookingRespository.findAll();
-    }
-
-    @Override
-    public Optional<BookingEntity> findById(Long id) {
-        return bookingRespository.findById(id);
-    }
 
     @Override
     public BookingDto addBooking(BookingCreateDto bookingCreateDto) {
@@ -59,38 +54,21 @@ public class BookingServiceimpl implements BookingService {
         if (bookingCreateDto.getTimeIn() == null || bookingCreateDto.getTimeOut() == null) {
             throw new CustomException("400", "TimeOut and TimeIn is null");
         }
-        if (bookingCreateDto.getName() == null) {
-            throw new CustomException("400", "Name cannot be empty");
+        if(bookingCreateDto.getIdAccount() == null) {
+            throw new CustomException("400", "IdAccount is null");
         }
-        if (bookingCreateDto.getPhone() == null) {
-            throw new CustomException("400", "Phone cannot be empty");
+        if(accountRepository.findById(bookingCreateDto.getIdAccount()).isEmpty()) {
+            throw new CustomException("400", "Account not found");
         }
-
-        if (bookingCreateDto.getPhone().length() < 10 || bookingCreateDto.getPhone().length() > 11) {
-            throw new CustomException("400", "Phone is valid");
-        }
-
-        if (bookingCreateDto.getEmail() == null) {
-            throw new CustomException("400", "Email cannot be empty");
-        }
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        if (!pattern.matcher(bookingCreateDto.getEmail()).matches()) {
-            throw new CustomException("400", "Email is invalid");
-        }
-
         Long totalPrice = calculateTotalPrice(room.getPrice(), DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()), DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
         BookingEntity bookingEntity = new BookingEntity();
         bookingEntity.setTotalPrice(totalPrice);
         bookingEntity.setIsPaid(bookingCreateDto.getIsPaid());
-        bookingEntity.setNameGuest(bookingCreateDto.getName());
-        bookingEntity.setPhone(bookingCreateDto.getPhone());
-        bookingEntity.setEmail(bookingCreateDto.getEmail());
         bookingEntity.setTimeIn(DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()));
         bookingEntity.setTimeOut(DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
         bookingEntity.setIdRoom(bookingCreateDto.getIdRoom());
+        bookingEntity.setIdAccount(bookingCreateDto.getIdAccount());
         room.setIsAvailabile(false);
-
 
         return new BookingDto(bookingRespository.save(bookingEntity), room);
     }
@@ -103,9 +81,6 @@ public class BookingServiceimpl implements BookingService {
         }
         BookingEntity booking = bookingEntity.get();
         booking.setIsPaid(bookingCreateDto.getIsPaid());
-        booking.setEmail(bookingCreateDto.getEmail());
-
-
         return new BookingDto(bookingRespository.save(booking), RoomEntity.builder().build());
     }
 
@@ -154,7 +129,7 @@ public class BookingServiceimpl implements BookingService {
     }
 
     @Override
-    public ReportDto getReport(Long idAccount) {
+    public ReportDto getReport(Long idAccount)  {
         List<BillDto> billDtos = getBillDtosForAccount(idAccount);
         ReportDto reportDto = new ReportDto();
         reportDto.setRevenue(calculateTotalRevenue(billDtos));
@@ -179,14 +154,10 @@ public class BookingServiceimpl implements BookingService {
         for (Object[] rawBooking : rawBookings) {
             Long bookingId = (Long) rawBooking[0];
             Long roomId = (Long) rawBooking[1];
-            Long roomNumber = (Long) rawBooking[2];
-            String roomType = (String) rawBooking[3];
+            String roomNumber = (String) rawBooking[2];
+            Long roomType = (Long) rawBooking[3];
             Long roomPrice = (Long) rawBooking[4];
             Boolean isAvailable = (Boolean) rawBooking[5];
-
-            String nameGuest = (String) rawBooking[6];
-            String phone = (String) rawBooking[7];
-            String email = (String) rawBooking[8];
             Timestamp timeIn = (Timestamp) rawBooking[9];
             Timestamp timeOut = (Timestamp) rawBooking[10];
             Long totalPrice = (Long) rawBooking[11];
@@ -196,7 +167,7 @@ public class BookingServiceimpl implements BookingService {
             RoomDto roomDto = new RoomDto(roomId, roomNumber, roomType, roomPrice, isAvailable);
 
             // Create BookingDto
-            BookingDto bookingDto = new BookingDto(bookingId, roomDto, nameGuest, phone, email, timeIn, timeOut, totalPrice, isPaid);
+            BookingDto bookingDto = new BookingDto(bookingId, roomDto, timeIn, timeOut, totalPrice, isPaid);
 
             // Add to list
             bookingDtos.add(bookingDto);
@@ -207,14 +178,11 @@ public class BookingServiceimpl implements BookingService {
     public BookingDto mapToBookingDto(Object[] result) {
         Long bookingId = (Long) result[0];
         Long roomId = (Long) result[1];
-        Long numberRoom = (Long) result[2];
-        String typeRoom = (String) result[3];
+        String numberRoom = (String) result[2];
+        Long typeRoom = (Long) result[3];
         Long price = (Long) result[4];
         Boolean isAvailable = (Boolean) result[5];
 
-        String nameGuest = (String) result[6];
-        String phone = (String) result[7];
-        String email = (String) result[8];
         Timestamp timeIn = (Timestamp) result[9];
         Timestamp timeOut = (Timestamp) result[10];
         Long totalPrice = (Long) result[11];
@@ -224,7 +192,7 @@ public class BookingServiceimpl implements BookingService {
         RoomDto roomDto = new RoomDto(roomId, numberRoom, typeRoom, price, isAvailable);
 
         // Create BookingDto
-        return new BookingDto(bookingId, roomDto, nameGuest, phone, email, timeIn, timeOut, totalPrice, isPaid);
+        return new BookingDto(bookingId, roomDto, timeIn, timeOut, totalPrice, isPaid);
     }
 
     private BigDecimal calculateTotalRevenue(List<BillDto> billDtos) {
@@ -234,9 +202,8 @@ public class BookingServiceimpl implements BookingService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all totalAmount values
     }
     private List<BillDto> getBillDtosForAccount(Long idAccount) {
-        // Your logic to fetch billDtos from DB
-
-        return new ArrayList<>(); // Return actual list from the repository
+        List<BillDto> billDtos = specBillRepository.getSalary(idAccount);
+        return billDtos; // Return actual list from the repository
     }
 
 }

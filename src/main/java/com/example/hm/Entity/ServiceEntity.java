@@ -33,5 +33,6 @@ public class ServiceEntity {
         this.name = serviceDto.getName();
         this.price = serviceDto.getPrice();
         this.image = serviceDto.getImage();
+        this.idAccount = serviceDto.getIdAccount();
     }
 }

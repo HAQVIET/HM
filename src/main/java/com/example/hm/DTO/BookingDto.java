@@ -16,9 +16,6 @@ import java.sql.Timestamp;
 public class BookingDto {
     private Long id;
     private RoomDto room;
-    private String name;
-    private String phone;
-    private String email;
     private Timestamp timeIn;
     private Timestamp timeOut;
     private Long totalPrice;
@@ -38,9 +35,6 @@ public class BookingDto {
    public BookingDto (BookingEntity bookingEntity,RoomEntity roomEntity) {
         this.id = bookingEntity.getId();
        this.room = convertRoomDtotoRoomEntity(roomEntity);
-        this.name = bookingEntity.getNameGuest();
-        this.phone = bookingEntity.getPhone();
-        this.email = bookingEntity.getEmail();
         this.timeOut = bookingEntity.getTimeOut();
         this.timeIn = bookingEntity.getTimeIn();
         this.totalPrice = bookingEntity.getTotalPrice();

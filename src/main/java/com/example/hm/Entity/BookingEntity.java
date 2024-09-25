@@ -43,9 +43,6 @@ public class BookingEntity {
 
     public BookingEntity(BookingCreateDto bookingCreateDto){
         this.idRoom = bookingCreateDto.getIdRoom();
-        this.nameGuest = bookingCreateDto.getName();
-        this.phone = bookingCreateDto.getPhone();
-        this.email = bookingCreateDto.getEmail();
         this.timeIn = DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn());
         this.timeOut = DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut());
         this.isPaid = bookingCreateDto.getIsPaid();

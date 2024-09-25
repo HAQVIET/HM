@@ -28,11 +28,6 @@ public class RoomServiceimpl implements RoomService {
 
 
     @Override
-    public List<RoomEntity> findAll() {
-        return roomRespository.findAll();
-    }
-
-    @Override
     public Optional<RoomEntity> findById(Long id) {
         return roomRespository.findById(id);
     }
@@ -44,6 +39,12 @@ public class RoomServiceimpl implements RoomService {
         }
         if(roomCreateDto.getPrice() == null || roomCreateDto.getPrice() < 0){
             throw new CustomException("400","Price of room is required");
+        }
+        if(roomCreateDto.getIdAccount() == null){
+            throw new CustomException("400","Id of account is required");
+        }
+        if(accountRepository.findById(roomCreateDto.getIdAccount()).isEmpty()){
+            throw new CustomException("400","Account not found");
         }
         return new RoomDto(roomRespository.save(new RoomEntity(roomCreateDto)));
     }

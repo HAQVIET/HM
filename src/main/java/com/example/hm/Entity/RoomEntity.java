@@ -19,9 +19,9 @@ public class RoomEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @Column(name = "number_room", nullable = false)
-    private Long numberRoom;
+    private String numberRoom;
     @Column(name = "type_room", nullable = false)
-    private String typeRoom;
+    private Long typeRoom;
     @Column(name = "price", nullable = false)
     private Long price;
     @Column(name = "is_availibe",nullable = false)
@@ -33,5 +33,6 @@ public class RoomEntity {
         this.typeRoom = roomCreateDto.getTypeRoom();
         this.price = roomCreateDto.getPrice();
         this.isAvailabile = true;
+        this.idAccount = roomCreateDto.getIdAccount();
     }
 }
