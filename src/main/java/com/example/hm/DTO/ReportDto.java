@@ -15,7 +15,7 @@ import java.util.List;
 public class ReportDto {
     private Long totalBooking;
     private BigDecimal revenue;
-    private List<BillDto> bills;
+//    private List<BillDto> bills;
 
 
 }

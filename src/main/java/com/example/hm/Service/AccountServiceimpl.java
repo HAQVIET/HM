@@ -76,6 +76,8 @@ public class AccountServiceimpl implements AccountService {
         accountEntity.setName(accountUpdateDto.getName());
         accountEntity.setPhone(accountUpdateDto.getPhone());
         accountEntity.setAddress(accountUpdateDto.getAddress());
+        accountEntity.setPassword(accountUpdateDto.getPassword());
+        accountEntity.setImage(accountUpdateDto.getImage());
         accountRepository.save(accountEntity);
         return new AccountDto(accountEntity);
     }

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "room", schema = "hm", catalog = "postgres")
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class RoomEntity {
     @Column(name = "type_room", nullable = false)
     private Long typeRoom;
     @Column(name = "price", nullable = false)
-    private Long price;
+    private BigDecimal price;
     @Column(name = "is_availibe",nullable = false)
     private Boolean isAvailabile;
     @Column(name = "id_account")

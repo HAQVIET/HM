@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -23,18 +24,12 @@ public class BookingEntity {
     private Long id;
     @Column(name = "id_room", nullable = false)
     private Long idRoom;
-    @Column(name = "name", nullable = false)
-    private String nameGuest;
-    @Column(name = "phone", nullable = false)
-    private String phone;
-    @Column(name = "email", nullable = false)
-    private String email;
     @Column(name = "time_in", nullable = false)
     private Timestamp timeIn;
-    @Column(name = "time_out",nullable = false)
+    @Column(name = "time_out")
     private Timestamp timeOut;
     @Column(name ="total_price")
-    private Long totalPrice;
+    private BigDecimal totalPrice;
     @Column(name = "is_paid",nullable = false)
     private Boolean isPaid;
     @Column(name = "id_account")
@@ -44,8 +39,8 @@ public class BookingEntity {
     public BookingEntity(BookingCreateDto bookingCreateDto){
         this.idRoom = bookingCreateDto.getIdRoom();
         this.timeIn = DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn());
-        this.timeOut = DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut());
         this.isPaid = bookingCreateDto.getIsPaid();
+        this.idAccount = bookingCreateDto.getIdAccount();
     }
 
 }

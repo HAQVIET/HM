@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -23,7 +24,7 @@ public class ServiceEntity {
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "price", nullable = false)
-    private Long price;
+    private BigDecimal price;
     @Column(name = "image")
     private String image;
     @Column(name ="id_account")

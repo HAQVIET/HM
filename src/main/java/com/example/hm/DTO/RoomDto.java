@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +16,7 @@ public class RoomDto {
     private Long id;
     private String numberRoom;
     private Long typeRoom;;
-    private Long price;
+    private BigDecimal price;
     private Boolean available;
 
     public RoomDto(RoomEntity roomEntity){

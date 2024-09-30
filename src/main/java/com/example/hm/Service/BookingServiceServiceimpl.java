@@ -51,7 +51,7 @@ public class BookingServiceServiceimpl implements BookingServiceService {
                 .inforHotel(inforHotelDto)
                 .bookingDto(new BookingDto(bookingEntity,roomEntity))
                 .serviceDtoList(serviceCreateDtos)
-                .totalAmount(serviceCreateDtos.stream().map(ServiceCreateDto::getAmount).reduce(BigDecimal.valueOf(bookingEntity.getTotalPrice()),BigDecimal::add))
+                .totalAmount(serviceCreateDtos.stream().map(ServiceCreateDto::getAmount).reduce((bookingEntity.getTotalPrice()),BigDecimal::add))
                 .build();
     }
 

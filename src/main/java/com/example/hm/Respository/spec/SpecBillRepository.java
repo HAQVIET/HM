@@ -45,10 +45,12 @@ public class SpecBillRepository {
                 "    INNER JOIN booking b ON a.id = b.id_account " +
                 "    INNER JOIN room r ON r.id = b.id_room " +
                 "    LEFT JOIN booking_service bs ON bs.id_booking = b.id " +
-                "    LEFT JOIN service s ON s.id = bs.id_service "
-               ;
+                "    LEFT JOIN service s ON s.id = bs.id_service " +
+                "WHERE a.id = ?" +
+                "and b.is_paid = true";
 
         Query query = entityManager.createNativeQuery(sql);
+        query.setParameter(1, idAccount);  // Ensure parameter binding
 
         // Get the results as a List of Object arrays
         List<Object[]> results = query.getResultList();
@@ -65,14 +67,14 @@ public class SpecBillRepository {
             Long roomId = ((Number) row[4]).longValue();
             String numberRoom = (String) row[5];
             Long typeRoom = (Long) row[6];
-            Long roomPrice = (Long) row[7];
+            BigDecimal roomPrice = row[7] != null ? BigDecimal.valueOf(((Number) row[7]).longValue()) : BigDecimal.ZERO;  // Cast to BigDecimal
             Timestamp timeIn = (Timestamp) row[8];
             Timestamp timeOut = (Timestamp) row[9];
-            Long totalPrice = (Long) row[10];
+            BigDecimal totalPrice = row[10] != null ? BigDecimal.valueOf(((Number) row[10]).longValue()) : BigDecimal.ZERO;  // Handle null
             Boolean isPaid = (Boolean) row[11];
             Long serviceId = row[12] != null ? ((Number) row[12]).longValue() : null;
             String serviceName = (String) row[13];
-            Long servicePrice = (Long) row[14];
+            BigDecimal servicePrice = row[14] != null ? BigDecimal.valueOf(((Number) row[14]).longValue()) : BigDecimal.ZERO;
             Long serviceQuantity = row[15] != null ? ((Number) row[15]).longValue() : null;
 
             // Create or update BillDto based on bookingId
@@ -94,11 +96,11 @@ public class SpecBillRepository {
                 roomDto.setId(roomId);
                 roomDto.setNumberRoom(numberRoom);
                 roomDto.setTypeRoom(typeRoom);
-                roomDto.setPrice((roomPrice));
+                roomDto.setPrice(roomPrice);  // Set roomPrice as BigDecimal
                 bookingDto.setRoom(roomDto);
                 bookingDto.setTimeIn(timeIn);
                 bookingDto.setTimeOut(timeOut);
-                bookingDto.setTotalPrice(totalPrice);
+                bookingDto.setTotalPrice(totalPrice);  // Set totalPrice as BigDecimal
                 bookingDto.setIsPaid(isPaid);
                 billDto.setBookingDto(bookingDto);
 
@@ -108,14 +110,18 @@ public class SpecBillRepository {
                 billDtoMap.put(bookingId, billDto);
             }
 
-            // Add service to the list if exists
+            // Add service to the list if it exists
             if (serviceId != null) {
                 ServiceCreateDto serviceCreateDto = new ServiceCreateDto();
                 serviceCreateDto.setId(serviceId);
                 serviceCreateDto.setNameService(serviceName);
-                serviceCreateDto.setPrice(servicePrice);
+                serviceCreateDto.setPrice(servicePrice);  // Set servicePrice as BigDecimal
                 serviceCreateDto.setQuantity(serviceQuantity);
-                serviceCreateDto.setAmount(BigDecimal.valueOf(servicePrice).multiply(BigDecimal.valueOf(serviceQuantity)));
+                if (serviceQuantity != null) {
+                    serviceCreateDto.setAmount(servicePrice.multiply(BigDecimal.valueOf(serviceQuantity)));  // Correct amount calculation
+                } else {
+                    serviceCreateDto.setAmount(BigDecimal.ZERO);  // Handle null quantity
+                }
 
                 billDto.getServiceDtoList().add(serviceCreateDto);
             }
@@ -123,14 +129,15 @@ public class SpecBillRepository {
 
         // Calculate totalAmount for each BillDto
         for (BillDto billDto : billDtoMap.values()) {
-            BigDecimal totalAmount = BigDecimal.valueOf(billDto.getBookingDto().getTotalPrice());
+            BigDecimal totalAmount = billDto.getBookingDto().getTotalPrice();  // Initialize with booking's totalPrice
             for (ServiceCreateDto service : billDto.getServiceDtoList()) {
-                totalAmount = totalAmount.add(service.getAmount());
+                totalAmount = totalAmount.add(service.getAmount());  // Add service amounts to total
             }
-            billDto.setTotalAmount(totalAmount);
+            billDto.setTotalAmount(totalAmount);  // Set final totalAmount
         }
 
         // Return the list of BillDto
         return new ArrayList<>(billDtoMap.values());
     }
 }
+

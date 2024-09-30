@@ -11,7 +11,6 @@ import com.example.hm.Respository.RoomRespository;
 import com.example.hm.Respository.spec.SpecBillRepository;
 import com.example.hm.handler_exception.CustomException;
 import com.example.hm.utils.DateUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -51,8 +49,8 @@ public class BookingServiceimpl implements BookingService {
         if (!room.getIsAvailabile()) {
             throw new CustomException("400", "Room is not available.");
         }
-        if (bookingCreateDto.getTimeIn() == null || bookingCreateDto.getTimeOut() == null) {
-            throw new CustomException("400", "TimeOut and TimeIn is null");
+        if (bookingCreateDto.getTimeIn() == null ) {
+            throw new CustomException("400", "TimeIn is null");
         }
         if(bookingCreateDto.getIdAccount() == null) {
             throw new CustomException("400", "IdAccount is null");
@@ -60,17 +58,14 @@ public class BookingServiceimpl implements BookingService {
         if(accountRepository.findById(bookingCreateDto.getIdAccount()).isEmpty()) {
             throw new CustomException("400", "Account not found");
         }
-        Long totalPrice = calculateTotalPrice(room.getPrice(), DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()), DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
-        BookingEntity bookingEntity = new BookingEntity();
-        bookingEntity.setTotalPrice(totalPrice);
-        bookingEntity.setIsPaid(bookingCreateDto.getIsPaid());
-        bookingEntity.setTimeIn(DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()));
-        bookingEntity.setTimeOut(DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
-        bookingEntity.setIdRoom(bookingCreateDto.getIdRoom());
-        bookingEntity.setIdAccount(bookingCreateDto.getIdAccount());
-        room.setIsAvailabile(false);
+        if (!bookingCreateDto.getIsPaid()){
+            if(bookingCreateDto.getTimeOut() == null){
+                room.setIsAvailabile(false);
+            }
+        }
 
-        return new BookingDto(bookingRespository.save(bookingEntity), room);
+
+        return new BookingDto(bookingRespository.save(new BookingEntity(bookingCreateDto)), room);
     }
 
     @Override
@@ -79,9 +74,22 @@ public class BookingServiceimpl implements BookingService {
         if (bookingEntity.isEmpty()) {
             throw new CustomException("400", "Booking not found");
         }
+        RoomEntity room = roomRespository.findById(bookingCreateDto.getIdRoom()).get();
+        BigDecimal totalPrice = calculateTotalPrice(room.getPrice(), DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()), DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
         BookingEntity booking = bookingEntity.get();
+        booking.setTotalPrice(totalPrice);
         booking.setIsPaid(bookingCreateDto.getIsPaid());
-        return new BookingDto(bookingRespository.save(booking), RoomEntity.builder().build());
+        booking.setTimeIn(DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()));
+        booking.setTimeOut(DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
+        booking.setIdRoom(bookingCreateDto.getIdRoom());
+
+        return new BookingDto(bookingRespository.save(booking), RoomEntity.builder()
+                .id(room.getId())
+                .numberRoom(room.getNumberRoom())
+                .typeRoom(room.getTypeRoom())
+                .price(room.getPrice())
+                .isAvailabile(true)
+                .build());
     }
 
     @Override
@@ -133,19 +141,19 @@ public class BookingServiceimpl implements BookingService {
         List<BillDto> billDtos = getBillDtosForAccount(idAccount);
         ReportDto reportDto = new ReportDto();
         reportDto.setRevenue(calculateTotalRevenue(billDtos));
-        reportDto.setBills(billDtos);
+//        reportDto.setBills(billDtos);
         reportDto.setTotalBooking(bookingRespository.getReport(idAccount));
 
         return reportDto;
     }
 
-    private Long calculateTotalPrice(Long pricePerNight, Timestamp checkInTimestamp, Timestamp checkOutTimestamp) {
+    private BigDecimal calculateTotalPrice(BigDecimal pricePerNight, Timestamp checkInTimestamp, Timestamp checkOutTimestamp) {
         // Calculate the number of milliseconds between the two timestamps
         LocalDate dateIn = checkInTimestamp.toLocalDateTime().toLocalDate();
         LocalDate dateOut = checkOutTimestamp.toLocalDateTime().toLocalDate();
         // Calculate total price based on the price per night
         Long days = ChronoUnit.DAYS.between(dateIn, dateOut);
-        return days * pricePerNight;
+        return pricePerNight.multiply(BigDecimal.valueOf(days));
     }
 
     public List<BookingDto> mapBookingsToDto(List<Object[]> rawBookings) {
@@ -156,11 +164,11 @@ public class BookingServiceimpl implements BookingService {
             Long roomId = (Long) rawBooking[1];
             String roomNumber = (String) rawBooking[2];
             Long roomType = (Long) rawBooking[3];
-            Long roomPrice = (Long) rawBooking[4];
+            BigDecimal roomPrice = (BigDecimal) rawBooking[4];
             Boolean isAvailable = (Boolean) rawBooking[5];
             Timestamp timeIn = (Timestamp) rawBooking[9];
             Timestamp timeOut = (Timestamp) rawBooking[10];
-            Long totalPrice = (Long) rawBooking[11];
+            BigDecimal totalPrice = (BigDecimal) rawBooking[11];
             Boolean isPaid = (Boolean) rawBooking[12];
 
             // Create RoomDto
@@ -180,12 +188,12 @@ public class BookingServiceimpl implements BookingService {
         Long roomId = (Long) result[1];
         String numberRoom = (String) result[2];
         Long typeRoom = (Long) result[3];
-        Long price = (Long) result[4];
+        BigDecimal price = (BigDecimal) result[4];
         Boolean isAvailable = (Boolean) result[5];
 
         Timestamp timeIn = (Timestamp) result[9];
         Timestamp timeOut = (Timestamp) result[10];
-        Long totalPrice = (Long) result[11];
+        BigDecimal totalPrice = (BigDecimal) result[11];
         Boolean isPaid = (Boolean) result[12];
 
         // Create RoomDto

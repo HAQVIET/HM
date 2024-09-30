@@ -36,6 +36,7 @@ public class AccountEntity {
         this.name = accountCreateDto.getName();
         this.phone = accountCreateDto.getPhone();
         this.address = accountCreateDto.getAddress();
+        this.image = accountCreateDto.getImage();
     }
 
 }

@@ -37,7 +37,7 @@ public class RoomServiceimpl implements RoomService {
         if(roomCreateDto.getNumberRoom() == null|| roomCreateDto.getTypeRoom() == null){
             throw new CustomException("400","Number of room and Type of room is required");
         }
-        if(roomCreateDto.getPrice() == null || roomCreateDto.getPrice() < 0){
+        if(roomCreateDto.getPrice() == null ){
             throw new CustomException("400","Price of room is required");
         }
         if(roomCreateDto.getIdAccount() == null){

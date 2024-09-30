@@ -30,7 +30,7 @@ public class ServiceServiceimpl implements ServiceService {
         if (serviceDto.getName() == null ){
             throw new CustomException("400","Name is required");
         }
-        if(serviceDto.getPrice() == null || serviceDto.getPrice() < 0){
+        if(serviceDto.getPrice() == null ){
             throw new CustomException("400","Price is required");
         }
         if(serviceDto.getIdAccount() == null || serviceDto.getIdAccount() < 0){

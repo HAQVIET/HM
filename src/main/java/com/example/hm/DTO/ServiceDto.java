@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class ServiceDto {
     private Long id ;
     private String name;
-    private Long price;
+    private BigDecimal price;
     private String image;
     private Long idAccount;
 
@@ -24,7 +26,7 @@ public class ServiceDto {
         this.price = serviceEntity.getPrice();
         this.image = serviceEntity.getImage();
     }
-    public ServiceDto(Long id, String name, Long price, String image) {
+    public ServiceDto(Long id, String name, BigDecimal price, String image) {
         this.id = id;
         this.name = name;
         this.price = price;

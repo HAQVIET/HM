@@ -15,15 +15,15 @@ import java.math.BigDecimal;
 public class ServiceCreateDto {
     private Long id;
     private String nameService;
-    private Long price;
+    private BigDecimal price;
     private Long quantity;
     private BigDecimal amount;
 
-    public ServiceCreateDto(Long id, String nameService, Long price, Long quantity) {
+    public ServiceCreateDto(Long id, String nameService, BigDecimal price, Long quantity) {
         this.id = id;
         this.nameService = nameService;
         this.price = price;
         this.quantity = quantity;
-        this.amount = BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(quantity));
+        this.amount = price.multiply(BigDecimal.valueOf(quantity));
     }
 }

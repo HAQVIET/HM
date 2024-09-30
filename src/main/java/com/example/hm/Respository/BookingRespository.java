@@ -16,14 +16,14 @@ import java.util.List;
 @Repository
 public interface BookingRespository extends JpaRepository<BookingEntity, Long>, JpaSpecificationExecutor<BookingEntity> {
     @Query(value = "select b.id, r.id, r.numberRoom, r.typeRoom, r.price, r.isAvailabile ," +
-            " b.nameGuest,b.phone, b.email, b.timeIn, b.timeOut, b.totalPrice, b.isPaid " +
+            "  b.timeIn, b.timeOut, b.totalPrice, b.isPaid " +
             "from BookingEntity b " +
             "inner join RoomEntity r on r.id = b.idRoom " +
             "where b.idAccount = :id_account")
     List<Object[]> getBookingsByAccount(@Param("id_account") Long id_account);
 
     @Query(value = "select b.id, r.id, r.numberRoom, r.typeRoom, r.price, r.isAvailabile ," +
-            " b.nameGuest,b.phone, b.email, b.timeIn, b.timeOut, b.totalPrice, b.isPaid " +
+            "  b.timeIn, b.timeOut, b.totalPrice, b.isPaid " +
             "from BookingEntity b " +
             "inner join RoomEntity r on r.id = b.idRoom " +
             "where  b.idAccount = :id_account and  b.id = :id_booking " )

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Data
@@ -18,7 +19,7 @@ public class BookingDto {
     private RoomDto room;
     private Timestamp timeIn;
     private Timestamp timeOut;
-    private Long totalPrice;
+    private BigDecimal totalPrice;
     private Boolean isPaid;
 
 
@@ -28,7 +29,7 @@ public class BookingDto {
         roomDto.setNumberRoom(roomEntity.getNumberRoom());
         roomDto.setTypeRoom(roomEntity.getTypeRoom());
         roomDto.setPrice(roomEntity.getPrice());
-        roomDto.setAvailable(false);
+        roomDto.setAvailable(roomEntity.getIsAvailabile());
         return roomDto;
     }
 
