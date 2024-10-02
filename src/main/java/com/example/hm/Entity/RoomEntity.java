@@ -28,7 +28,7 @@ public class RoomEntity {
     private BigDecimal price;
     @Column(name = "is_availibe",nullable = false)
     private Boolean isAvailabile;
-    @Column(name = "id_account")
+    @Column(name = "id_account",nullable = false)
     private Long idAccount;
     public RoomEntity(RoomCreateDto roomCreateDto) {
         this.numberRoom = roomCreateDto.getNumberRoom();

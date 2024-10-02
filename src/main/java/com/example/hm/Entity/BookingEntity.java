@@ -32,7 +32,7 @@ public class BookingEntity {
     private BigDecimal totalPrice;
     @Column(name = "is_paid",nullable = false)
     private Boolean isPaid;
-    @Column(name = "id_account")
+    @Column(name = "id_account",nullable = false)
     private Long idAccount;
 
 

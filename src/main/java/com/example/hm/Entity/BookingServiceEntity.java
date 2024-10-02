@@ -24,7 +24,7 @@ public class BookingServiceEntity {
     private Long idService;
     @Column(name ="quantity",nullable = false)
     private Long quantity;
-    @Column(name ="id_account")
+    @Column(name ="id_account",nullable = false)
     private Long idAccount;
 
     public BookingServiceEntity(BookingServiceDto bookingServiceDto) {

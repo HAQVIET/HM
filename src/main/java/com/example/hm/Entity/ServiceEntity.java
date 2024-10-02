@@ -27,7 +27,7 @@ public class ServiceEntity {
     private BigDecimal price;
     @Column(name = "image")
     private String image;
-    @Column(name ="id_account")
+    @Column(name ="id_account",nullable = false)
     private Long idAccount;
 
     public ServiceEntity(ServiceDto serviceDto) {

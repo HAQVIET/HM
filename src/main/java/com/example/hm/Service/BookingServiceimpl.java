@@ -82,6 +82,7 @@ public class BookingServiceimpl implements BookingService {
         booking.setTimeIn(DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()));
         booking.setTimeOut(DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
         booking.setIdRoom(bookingCreateDto.getIdRoom());
+        room.setIsAvailabile(true);
 
         return new BookingDto(bookingRespository.save(booking), RoomEntity.builder()
                 .id(room.getId())
@@ -166,10 +167,10 @@ public class BookingServiceimpl implements BookingService {
             Long roomType = (Long) rawBooking[3];
             BigDecimal roomPrice = (BigDecimal) rawBooking[4];
             Boolean isAvailable = (Boolean) rawBooking[5];
-            Timestamp timeIn = (Timestamp) rawBooking[9];
-            Timestamp timeOut = (Timestamp) rawBooking[10];
-            BigDecimal totalPrice = (BigDecimal) rawBooking[11];
-            Boolean isPaid = (Boolean) rawBooking[12];
+            Timestamp timeIn = (Timestamp) rawBooking[6];
+            Timestamp timeOut = (Timestamp) rawBooking[7];
+            BigDecimal totalPrice = (BigDecimal) rawBooking[8];
+            Boolean isPaid = (Boolean) rawBooking[9];
 
             // Create RoomDto
             RoomDto roomDto = new RoomDto(roomId, roomNumber, roomType, roomPrice, isAvailable);
@@ -190,11 +191,10 @@ public class BookingServiceimpl implements BookingService {
         Long typeRoom = (Long) result[3];
         BigDecimal price = (BigDecimal) result[4];
         Boolean isAvailable = (Boolean) result[5];
-
-        Timestamp timeIn = (Timestamp) result[9];
-        Timestamp timeOut = (Timestamp) result[10];
-        BigDecimal totalPrice = (BigDecimal) result[11];
-        Boolean isPaid = (Boolean) result[12];
+        Timestamp timeIn = (Timestamp) result[6];
+        Timestamp timeOut = (Timestamp) result[7];
+        BigDecimal totalPrice = (BigDecimal) result[8];
+        Boolean isPaid = (Boolean) result[9];
 
         // Create RoomDto
         RoomDto roomDto = new RoomDto(roomId, numberRoom, typeRoom, price, isAvailable);

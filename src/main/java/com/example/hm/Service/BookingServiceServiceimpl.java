@@ -32,7 +32,7 @@ public class BookingServiceServiceimpl implements BookingServiceService {
 
     @Override
     public BillDto getbills( Long idBooking,Long idAccount) {
-        if(!bookingServiceRepository.existsByIdBooking(idBooking)){
+        if(bookingRespository.findById(idBooking).isEmpty()){
             throw new CustomException("400", "Bill Not Found");
         }
 
