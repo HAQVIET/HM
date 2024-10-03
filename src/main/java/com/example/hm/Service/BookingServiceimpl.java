@@ -74,9 +74,11 @@ public class BookingServiceimpl implements BookingService {
         if (bookingEntity.isEmpty()) {
             throw new CustomException("400", "Booking not found");
         }
+
         RoomEntity room = roomRespository.findById(bookingCreateDto.getIdRoom()).get();
         BigDecimal totalPrice = calculateTotalPrice(room.getPrice(), DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()), DateUtils.convertToTimestamp(bookingCreateDto.getTimeOut()));
         BookingEntity booking = bookingEntity.get();
+
         booking.setTotalPrice(totalPrice);
         booking.setIsPaid(bookingCreateDto.getIsPaid());
         booking.setTimeIn(DateUtils.convertToTimestamp(bookingCreateDto.getTimeIn()));
@@ -154,6 +156,9 @@ public class BookingServiceimpl implements BookingService {
         LocalDate dateOut = checkOutTimestamp.toLocalDateTime().toLocalDate();
         // Calculate total price based on the price per night
         Long days = ChronoUnit.DAYS.between(dateIn, dateOut);
+        if(days == 0){
+           days = 1L;
+        }
         return pricePerNight.multiply(BigDecimal.valueOf(days));
     }
 

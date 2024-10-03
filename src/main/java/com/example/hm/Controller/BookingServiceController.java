@@ -29,4 +29,8 @@ public class BookingServiceController {
     BookingServiceDto addservice(@RequestBody BookingServiceDto bookingServiceDto) {
         return bookingServiceService.addService(bookingServiceDto);
     }
+    @GetMapping("/list")
+    List<BillDto> getAllBills(@Param("idAccount") Long idAccount) {
+        return bookingServiceService.getAllBills(idAccount);
+    }
 }

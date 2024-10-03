@@ -35,7 +35,4 @@ public interface BookingRespository extends JpaRepository<BookingEntity, Long>, 
             " and b.isPaid =true ")
     Long getReport(@Param("id_account") Long id_account);
 
-
-
-
 }

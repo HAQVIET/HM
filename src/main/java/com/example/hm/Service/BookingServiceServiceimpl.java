@@ -7,11 +7,13 @@ import com.example.hm.Entity.BookingEntity;
 import com.example.hm.Entity.BookingServiceEntity;
 import com.example.hm.Entity.RoomEntity;
 import com.example.hm.Respository.*;
+import com.example.hm.Respository.spec.SpecBillRepository;
 import com.example.hm.handler_exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,8 @@ public class BookingServiceServiceimpl implements BookingServiceService {
     AccountRepository accountRepository;
     @Autowired
     ServiceRespository serviceRespository;
+    @Autowired
+    SpecBillRepository specBillRepository;
 
 
     @Override
@@ -91,6 +95,18 @@ public class BookingServiceServiceimpl implements BookingServiceService {
         throw new CustomException("400", "Quantity is required");
     }
             return new BookingServiceDto(bookingServiceRepository.save(new BookingServiceEntity(bookingServiceDto)));
+    }
+
+    @Override
+    public List<BillDto> getAllBills(Long idAccount) {
+        if(idAccount == null){
+            throw new CustomException("400", "Account is required");
+        }
+        if(!accountRepository.existsById(idAccount)){
+            throw new CustomException("400", "Account Not Found");
+        }
+        List<BillDto> billDtos = specBillRepository.getSalary(idAccount);
+        return billDtos;
     }
 
 }
