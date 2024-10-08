@@ -97,7 +97,11 @@ public class BookingServiceimpl implements BookingService {
 
     @Override
     public void deleteBooking(Long id) {
+        BookingEntity booking = bookingRespository.findById(id).get();
+        RoomEntity room = roomRespository.findById(booking.getIdRoom()).get();
+        room.setIsAvailabile(true);
         bookingRespository.deleteById(id);
+
 
     }
 

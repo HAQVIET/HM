@@ -30,20 +30,16 @@ public class BookingController {
     void deleteCustomer(@PathVariable("id") Long id) {
         bookingService.deleteBooking(id);
     }
-
     @GetMapping("/getlist")
     List<BookingDto> getBookingList(@Param("idAccount") Long idAccount) {
         return bookingService.getBookings(idAccount);
     }
     @GetMapping("/getbooking")
-    BookingDto getBooking(@Param("idAccount") Long idAccount, @Param("idBooking") Long idBooking) {
+    BookingDto getBooking(@Param("idAccount") Long idAccount, @Param(   "idBooking") Long idBooking) {
         return bookingService.getBooking(idAccount,idBooking);
     }
     @GetMapping("/report")
     ReportDto getReport (@Param("idAccount") Long idAccount) {
         return bookingService.getReport(idAccount);
     }
-
-
-
 }
