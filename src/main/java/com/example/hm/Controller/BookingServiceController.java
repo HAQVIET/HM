@@ -33,4 +33,8 @@ public class BookingServiceController {
     List<BillDto> getAllBills(@Param("idAccount") Long idAccount) {
         return bookingServiceService.getAllBills(idAccount);
     }
+    @DeleteMapping("/{id}")
+    void deleteBill(@PathVariable ("id") Long id){
+        bookingServiceService.deleteBill(id);
+    }
 }

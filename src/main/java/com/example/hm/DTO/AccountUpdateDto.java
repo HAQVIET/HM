@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AccountUpdateDto {
-    private String password;
     private String name;
     private String phone;
     private String address;

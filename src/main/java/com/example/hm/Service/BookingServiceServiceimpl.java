@@ -69,7 +69,7 @@ public class BookingServiceServiceimpl implements BookingServiceService {
         }
         BookingServiceEntity bookingService = bookingServiceRepository.findByIdBookingAndIdService(id, bookingServiceDto.getIdService());
         if (bookingService == null) {
-            bookingServiceRepository.save(BookingServiceEntity.builder().idBooking(id).idService(bookingService.getIdService()).quantity(bookingServiceDto.getQuantity()).build());
+            bookingServiceRepository.save(BookingServiceEntity.builder().idBooking(id).idService(bookingService.getIdService()).quantity(bookingServiceDto.getQuantity()).idAccount(bookingService.getIdAccount()).build());
         }else {
             bookingService.setQuantity(bookingService.getQuantity() + bookingServiceDto.getQuantity());
             bookingServiceRepository.save(bookingService);
@@ -79,22 +79,51 @@ public class BookingServiceServiceimpl implements BookingServiceService {
 
     @Override
     public BookingServiceDto addService(BookingServiceDto bookingServiceDto) {
-        if(bookingServiceDto.getIdBooking() == null){
+        // Validate Booking
+        if (bookingServiceDto.getIdBooking() == null) {
             throw new CustomException("400", "Booking is required");
         }
-        if(bookingRespository.findById(bookingServiceDto.getIdBooking()).isEmpty()){
+        if (bookingRespository.findById(bookingServiceDto.getIdBooking()).isEmpty()) {
             throw new CustomException("400", "Booking Not Found");
         }
-        if(bookingServiceDto.getIdService() == null){
+
+        // Validate Service
+        if (bookingServiceDto.getIdService() == null) {
             throw new CustomException("400", "Service is required");
         }
-        if(serviceRespository.findById(bookingServiceDto.getIdService()).isEmpty()){
+        if (serviceRespository.findById(bookingServiceDto.getIdService()).isEmpty()) {
             throw new CustomException("400", "Service Not Found");
         }
-    if(bookingServiceDto.getQuantity() == null || bookingServiceDto.getQuantity() <= 0){
-        throw new CustomException("400", "Quantity is required");
-    }
-            return new BookingServiceDto(bookingServiceRepository.save(new BookingServiceEntity(bookingServiceDto)));
+
+        // Validate Quantity
+        if (bookingServiceDto.getQuantity() == null || bookingServiceDto.getQuantity() <= 0) {
+            throw new CustomException("400", "Quantity is required");
+        }
+
+        // Check if the service is already added to the booking
+        BookingServiceEntity bookingService = bookingServiceRepository.findByIdBookingAndIdService(
+                bookingServiceDto.getIdBooking(),
+                bookingServiceDto.getIdService()
+        );
+
+        // If service not found, create a new booking service entity
+        if (bookingService == null) {
+            bookingService = BookingServiceEntity.builder()
+                    .idBooking(bookingServiceDto.getIdBooking())
+                    .idService(bookingServiceDto.getIdService())
+                    .quantity(bookingServiceDto.getQuantity())
+                    .idAccount(bookingServiceDto.getIdAccount())
+                    .build();
+        } else {
+            // If service exists, update the quantity
+            bookingService.setQuantity(bookingService.getQuantity() + bookingServiceDto.getQuantity());
+        }
+
+        // Save the booking service entity
+        BookingServiceEntity savedEntity = bookingServiceRepository.save(bookingService);
+
+        // Return the saved entity as a DTO
+        return new BookingServiceDto(savedEntity);
     }
 
     @Override
@@ -107,6 +136,11 @@ public class BookingServiceServiceimpl implements BookingServiceService {
         }
         List<BillDto> billDtos = specBillRepository.getSalary(idAccount);
         return billDtos;
+    }
+
+    @Override
+    public void deleteBill(Long id) {
+        bookingServiceRepository.deleteById(id);
     }
 
 }

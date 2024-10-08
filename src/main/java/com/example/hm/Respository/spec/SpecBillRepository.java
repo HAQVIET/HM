@@ -10,10 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Repository
@@ -47,7 +44,8 @@ public class SpecBillRepository {
                 "    LEFT JOIN booking_service bs ON bs.id_booking = b.id " +
                 "    LEFT JOIN service s ON s.id = bs.id_service " +
                 "WHERE a.id = ?" +
-                "and b.is_paid = true";
+                "and b.is_paid = true" +
+                " order by b.id desc  ";
 
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter(1, idAccount);  // Ensure parameter binding
@@ -137,7 +135,7 @@ public class SpecBillRepository {
         }
 
         // Return the list of BillDto
-        return new ArrayList<>(billDtoMap.values());
+        return new ArrayList<>(billDtoMap.values().stream().sorted(Comparator.comparing(billDto -> billDto.getBookingDto().getId(), Comparator.nullsLast(Comparator.reverseOrder()))).toList());
     }
 }
 

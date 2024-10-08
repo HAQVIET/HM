@@ -11,4 +11,5 @@ public interface BookingServiceService {
     BillDto updatebills(Long id, BookingServiceDto bookingServiceDto);
     BookingServiceDto addService(BookingServiceDto bookingServiceDto);
 List<BillDto> getAllBills(Long idAccount);
+    void deleteBill(Long id);
 }

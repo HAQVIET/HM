@@ -72,12 +72,10 @@ public class AccountServiceimpl implements AccountService {
         if(accountRepository.findById(id).isEmpty()){
             throw new CustomException("400", "Account not found");
         }
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         AccountEntity accountEntity = accountRepository.findById(id).get();
         accountEntity.setName(accountUpdateDto.getName());
         accountEntity.setPhone(accountUpdateDto.getPhone());
         accountEntity.setAddress(accountUpdateDto.getAddress());
-        accountEntity.setPassword(passwordEncoder.encode(accountUpdateDto.getPassword()));
         accountEntity.setImage(accountUpdateDto.getImage());
         accountRepository.save(accountEntity);
         return new AccountDto(accountEntity);

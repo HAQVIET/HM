@@ -130,6 +130,7 @@ public class BookingServiceimpl implements BookingService {
         if(booking.isEmpty()){
             throw new CustomException("404","Booking not found");
         }
+
         List<Object[]> result = bookingRespository.findByIdAndIdAccount(idBooking, idAccount);
 
         // Assuming only one result should be returned:
@@ -177,6 +178,7 @@ public class BookingServiceimpl implements BookingService {
             BigDecimal totalPrice = (BigDecimal) rawBooking[8];
             Boolean isPaid = (Boolean) rawBooking[9];
 
+
             // Create RoomDto
             RoomDto roomDto = new RoomDto(roomId, roomNumber, roomType, roomPrice, isAvailable);
 
@@ -200,7 +202,6 @@ public class BookingServiceimpl implements BookingService {
         Timestamp timeOut = (Timestamp) result[7];
         BigDecimal totalPrice = (BigDecimal) result[8];
         Boolean isPaid = (Boolean) result[9];
-
         // Create RoomDto
         RoomDto roomDto = new RoomDto(roomId, numberRoom, typeRoom, price, isAvailable);
 
